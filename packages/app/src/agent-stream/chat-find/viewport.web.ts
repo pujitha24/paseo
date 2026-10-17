@@ -103,3 +103,9 @@ export function createFindViewport({
     },
   };
 }
+
+/** Returns focus to the chat feed so Page Up/Down keep scrolling it; a plain container would not. */
+export function focusChatFeed(root: HTMLElement | null): void {
+  const target = root?.querySelector<HTMLElement>('[data-testid="agent-chat-scroll"]') ?? root;
+  target?.focus({ preventScroll: true });
+}

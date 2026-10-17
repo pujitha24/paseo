@@ -20,7 +20,7 @@ import { isImeComposingKeyboardEvent } from "@/utils/keyboard-ime";
 import { getHostRuntimeStore } from "@/runtime/host-runtime";
 import { planTimelinePromptJump } from "@/timeline/timeline-sync-plan";
 import { ChatFindModel, type ChatFindFailure } from "./model";
-import { createFindViewport } from "./viewport.web";
+import { createFindViewport, focusChatFeed } from "./viewport.web";
 import type { ChatFindProps, ChatFindExpansionProps } from "./types";
 
 const SelectedMessage = createContext<string | null>(null);
@@ -118,7 +118,7 @@ export function ChatFind({
   }, [active, isInteractive, model]);
   const close = useCallback(() => {
     model.close();
-    root.current?.focus({ preventScroll: true });
+    focusChatFeed(root.current);
   }, [model]);
   let status = "";
   if (state.phase === "searching") status = t("paneFind.searching");

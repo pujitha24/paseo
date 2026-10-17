@@ -1,5 +1,5 @@
 import { afterEach, expect, it } from "vitest";
-import { createFindViewport } from "./viewport.web";
+import { createFindViewport, focusChatFeed } from "./viewport.web";
 import type { ChatFindProps } from "./types";
 import type { StreamViewportHandle } from "../strategy";
 
@@ -117,4 +117,17 @@ it("waits for an asynchronous renderer before counting its matches", async () =>
   content.textContent = "needle and another needle";
   content.removeAttribute("aria-busy");
   expect(await reveal).toEqual({ occurrence: 0, count: 2 });
+});
+
+it("returns focus to the chat feed rather than its wrapper", () => {
+  const root = document.createElement("div");
+  root.tabIndex = -1;
+  const feed = document.createElement("div");
+  feed.tabIndex = -1;
+  feed.setAttribute("data-testid", "agent-chat-scroll");
+  root.append(feed);
+  document.body.append(root);
+  focusChatFeed(root);
+  expect(document.activeElement).toBe(feed);
+  root.remove();
 });
