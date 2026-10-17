@@ -850,7 +850,10 @@ export class OmpAgentSession implements AgentSession {
   }
 
   async startTurn(prompt: AgentPromptInput, options?: AgentRunOptions): Promise<StartTurnResult> {
-    return this.startPrompt({ prompt, options });
+    // OMP rejects a plain prompt while it runs a turn it started itself (such as after a
+    // background job), so queue the message behind that turn.
+    const streamingBehavior = this.activeTurnStarted ? "followUp" : undefined;
+    return this.startPrompt({ prompt, options, streamingBehavior });
   }
 
   private async startPrompt({
