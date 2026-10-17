@@ -1217,6 +1217,16 @@ export function normalizeCapturedShortcutCombo(bindingId: string, combo: string)
   return combo.replace(/(^|\+)[1-9]$/, "$1Digit");
 }
 
+/**
+ * Number-group actions need a 1-9 index from the key, so a recorded combo that
+ * is not built on a digit would save a shortcut that never navigates.
+ */
+export function canCaptureShortcutCombo(bindingId: string, combo: string): boolean {
+  const binding = DEFAULT_BINDINGS.find((candidate) => candidate.id === bindingId);
+  if (binding?.payload?.type !== "index") return true;
+  return /(^|\+)Digit$/.test(normalizeCapturedShortcutCombo(bindingId, combo));
+}
+
 export function buildEffectiveBindings(overrides: ShortcutOverrides): ParsedShortcutBinding[] {
   return DEFAULT_BINDINGS.map(function (binding) {
     const override = overrides[binding.id];

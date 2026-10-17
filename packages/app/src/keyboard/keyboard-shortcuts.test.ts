@@ -4,6 +4,7 @@ import { keyboardEventToComboString } from "./shortcut-string";
 import {
   buildKeyboardShortcutHelpSections,
   buildEffectiveBindings,
+  canCaptureShortcutCombo,
   normalizeCapturedShortcutCombo,
   getBindingIdForAction,
   getDefaultKeysForAction,
@@ -1388,5 +1389,11 @@ describe("number-group shortcut capture", () => {
     expect(normalizeCapturedShortcutCombo(tabBindingId, "Ctrl+K")).toBe("Ctrl+K");
     expect(normalizeCapturedShortcutCombo(tabBindingId, "Ctrl+0")).toBe("Ctrl+0");
     expect(normalizeCapturedShortcutCombo(tabBindingId, "Ctrl+9")).toBe("Ctrl+Digit");
+  });
+  it("only captures digit combos for number-group actions", () => {
+    expect(canCaptureShortcutCombo(tabBindingId, "Ctrl+K")).toBe(false);
+    expect(canCaptureShortcutCombo(tabBindingId, "Ctrl+0")).toBe(false);
+    expect(canCaptureShortcutCombo(tabBindingId, "Ctrl+5")).toBe(true);
+    expect(canCaptureShortcutCombo("show-shortcuts", "Ctrl+K")).toBe(true);
   });
 });

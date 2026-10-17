@@ -19,6 +19,7 @@ import { useKeyboardShortcutOverrides } from "@/hooks/use-keyboard-shortcut-over
 import {
   buildKeyboardShortcutHelpSections,
   getBindingIdForAction,
+  canCaptureShortcutCombo,
   normalizeCapturedShortcutCombo,
   getDefaultKeysForAction,
   resolveShortcutKeysForAction,
@@ -390,6 +391,7 @@ export function KeyboardShortcutsSection() {
       }
 
       setHeldModifiers(null);
+      if (!canCaptureShortcutCombo(capturingBindingId!, comboString)) return;
       const capturedCombo = normalizeCapturedShortcutCombo(capturingBindingId!, comboString);
       setCapturedCombos((current) => [...current, capturedCombo]);
     }
